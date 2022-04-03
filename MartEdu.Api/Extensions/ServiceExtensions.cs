@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace MartEdu.Api.Extensions
 {
-    internal class ServiceExtensions
+    internal static class ServiceExtensions
     {
         public static void AddCustomServices(this IServiceCollection services)
         {
