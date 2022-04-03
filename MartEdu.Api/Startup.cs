@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using MartEdu.Service.Mappers;
 
 namespace MartEdu.Api
 {
@@ -38,6 +39,11 @@ namespace MartEdu.Api
 
 
             services.AddHttpContextAccessor();
+
+            // Mapper services
+            services.AddAutoMapper(typeof(MappingProfile));
+
+            // Custom services
             services.AddCustomServices();
         }
 

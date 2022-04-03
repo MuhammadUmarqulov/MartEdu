@@ -6,7 +6,7 @@ using MartEdu.Service.DTOs.Users;
 
 namespace MartEdu.Service.Mappers
 {
-    internal class MappingProfile : Profile
+    public class MappingProfile : Profile
     {
         public MappingProfile()
         {

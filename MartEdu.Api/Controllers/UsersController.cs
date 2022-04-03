@@ -82,7 +82,9 @@ namespace MartEdu.Api.Controllers
         [HttpPost("image/{id}")]
         public async Task<ActionResult<BaseResponse<User>>> SetImage(Guid id, IFormFile image)
         {
-            var result = await userService.
+            var result = await userService.SetImage(p => p.Id == id, image);
+
+            return StatusCode(200, result);
         }
 
     }

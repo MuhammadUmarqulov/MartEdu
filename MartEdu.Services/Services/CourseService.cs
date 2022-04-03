@@ -3,12 +3,16 @@ using MartEdu.Data.IRepositories;
 using MartEdu.Domain.Commons;
 using MartEdu.Domain.Configurations;
 using MartEdu.Domain.Entities.Courses;
+using MartEdu.Domain.Entities.Users;
+using MartEdu.Domain.Enums;
 using MartEdu.Service.DTOs.Courses;
+using MartEdu.Service.Extensions;
 using MartEdu.Service.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -43,6 +47,7 @@ namespace MartEdu.Service.Services
 
 
             var mappedCourse = mapper.Map<Course>(model);
+            mappedCourse.Image = await FileStreamExtensions.SaveFileAsync(model.Image.OpenReadStream(), model.Image.FileName, env, config);
 
             mappedCourse.Create();
 
@@ -78,24 +83,121 @@ namespace MartEdu.Service.Services
             return response;
         }
 
-        public Task<BaseResponse<IEnumerable<Course>>> GetAllAsync(PaginationParams @params, Expression<Func<Course, bool>> expression = null)
+        public async Task<BaseResponse<IEnumerable<Course>>> GetAllAsync(PaginationParams @params, Expression<Func<Course, bool>> expression = null)
         {
-            throw new NotImplementedException();
+            var response = new BaseResponse<IEnumerable<Course>>();
+
+            var courses = await unitOfWork.Courses.WhereAsync(expression);
+
+            courses = courses.Where(p => p.State != ItemState.Deleted);
+
+            response.Data = courses.ToPagedList(@params);
+
+            return response;
         }
 
-        public Task<BaseResponse<Course>> GetAsync(Expression<Func<Course, bool>> expression)
+        public async Task<BaseResponse<Course>> GetAsync(Expression<Func<Course, bool>> expression)
         {
-            throw new NotImplementedException();
+            var response = new BaseResponse<Course>();
+
+            var course = await unitOfWork.Courses.GetAsync(expression);
+
+
+            if (course is null || course.State == ItemState.Deleted)
+            {
+                response.Error = new ErrorResponse(404, "Course not found!");
+                return response;
+            }
+
+            response.Data = course;
+
+            return response;
         }
 
-        public Task<BaseResponse<Course>> Restore(Guid id)
+        public async Task<BaseResponse<Course>> Restore(Expression<Func<Course, bool>> expression)
         {
-            throw new NotImplementedException();
+            var response = new BaseResponse<Course>();
+
+            var course = await unitOfWork.Courses.GetAsync(expression);
+
+            if (course is null)
+            {
+                response.Error = new ErrorResponse(404, "Course not found!");
+                return response;
+            }
+
+            course.Update();
+
+            await unitOfWork.Courses.UpdateAsync(course);
+
+            await unitOfWork.SaveChangesAsync();
+
+            response.Data = course;
+
+            return response;
         }
 
-        public Task<BaseResponse<Course>> UpdateAsync(Guid id, CourseForCreationDto model)
+        public async Task<BaseResponse<Course>> UpdateAsync(Guid id, CourseForCreationDto model)
         {
-            throw new NotImplementedException();
+            var response = new BaseResponse<Course>();
+
+            // check for exist course
+            var course = await unitOfWork.Courses.GetAsync(p => p.Id == id && p.State == ItemState.Deleted);
+            if (course is null)
+            {
+                response.Error = new ErrorResponse(404, "User not found");
+                return response;
+            }
+
+            course.Name = model.Name;
+            course.Teg = model.Teg;
+            course.Level = model.Level;
+            course.Section = model.Section;
+            course.Description = model.Description;
+
+            course.Image = await FileStreamExtensions.SaveFileAsync(model.Image.OpenReadStream(), model.Image.FileName, env, config);
+            
+            course.Update();
+
+            var result = await unitOfWork.Courses.UpdateAsync(course);
+
+            await unitOfWork.SaveChangesAsync();
+
+            response.Data = result;
+
+            return response;
+        }
+    
+        public async Task<BaseResponse<string>> RegisterForCourse(Guid userId, Guid courseId)
+        {
+            var response = new BaseResponse<string>();
+
+            var user = await unitOfWork.Users.GetAsync(p => p.Id == userId && p.State != ItemState.Deleted);
+            if (user is null)
+            {
+                response.Error = new ErrorResponse(404, "User not found");
+                return response;
+            }
+
+            var course = await unitOfWork.Courses.GetAsync(p => p.Id == courseId && p.State != ItemState.Deleted);
+            if (course is null)
+            {
+                response.Error = new ErrorResponse(404, "Course not found!");
+                return response;
+            }
+
+            user.Courses.ToList().Add(course);
+            user.Update();
+            await unitOfWork.Users.UpdateAsync(user);
+
+            course.Participants = new List<User>() { user };
+            course.Update();
+            await unitOfWork.Courses.UpdateAsync(course);
+
+            await unitOfWork.SaveChangesAsync();
+
+            response.Data = "Success!";
+            return response;
         }
     }
 }

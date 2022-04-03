@@ -16,6 +16,7 @@ namespace MartEdu.Service.Interfaces
         Task<BaseResponse<bool>> DeleteAsync(Expression<Func<Course, bool>> expression);
         Task<BaseResponse<Course>> GetAsync(Expression<Func<Course, bool>> expression);
         Task<BaseResponse<IEnumerable<Course>>> GetAllAsync(PaginationParams @params, Expression<Func<Course, bool>> expression = null);
-        Task<BaseResponse<Course>> Restore(Guid id);
+        Task<BaseResponse<Course>> Restore(Expression<Func<Course, bool>> expression);
+        Task<BaseResponse<string>> RegisterForCourse(Guid userId, Guid courseId);
     }
 }

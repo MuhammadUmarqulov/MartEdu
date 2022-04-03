@@ -1,6 +1,7 @@
 ﻿using MartEdu.Domain.Commons;
 using MartEdu.Domain.Configurations;
 using MartEdu.Domain.Entities.Courses;
+using MartEdu.Domain.Enums;
 using MartEdu.Service.DTOs.Courses;
 using MartEdu.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,7 @@ namespace MartEdu.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<BaseResponse<IEnumerable<Course>>>> GetAll(PaginationParams @params)
+        public async Task<ActionResult<BaseResponse<IEnumerable<Course>>>> GetAll([FromQuery] PaginationParams @params)
         {
             var courses = await courseService.GetAllAsync(@params);
 
@@ -38,7 +39,7 @@ namespace MartEdu.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<BaseResponse<Course>>> Create(CourseForCreationDto course)
+        public async Task<ActionResult<BaseResponse<Course>>> Create([FromForm] CourseForCreationDto course)
         {
             var result = await courseService.CreateAsync(course);
 
@@ -56,7 +57,7 @@ namespace MartEdu.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<BaseResponse<Course>>> Delete(Guid id)
         {
-            var result = await courseService.DeleteAsync(p => p.Id == id);
+            var result = await courseService.DeleteAsync(p => p.Id == id && p.State != ItemState.Deleted);
 
             return StatusCode(200, result);
         }
@@ -64,7 +65,15 @@ namespace MartEdu.Api.Controllers
         [HttpPost("restore/{id}")]
         public async Task<ActionResult<BaseResponse<Course>>> Restore(Guid id)
         {
-            var result = await courseService.Restore(id);
+            var result = await courseService.Restore(p => p.Id == id);
+
+            return StatusCode(200, result);
+        }
+
+        [HttpPost("register/{userId}&{courseId}")]
+        public async Task<ActionResult<BaseResponse<string>>> Register(Guid userId, Guid courseId)
+        {
+            var result = await courseService.RegisterForCourse(userId, courseId);
 
             return StatusCode(200, result);
         }

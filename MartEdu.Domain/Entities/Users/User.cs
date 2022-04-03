@@ -8,6 +8,10 @@ namespace MartEdu.Domain.Entities.Users
 {
     public class User : IAuditable
     {
+        public User()
+        {
+            Courses = new List<Course>();
+        }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Username { get; set; }
@@ -17,7 +21,7 @@ namespace MartEdu.Domain.Entities.Users
         public string Phone { get; set; }
         public string Bio { get; set; }
 
-        public IEnumerable<Course> Courses { get; set; }
+        public IEnumerable<Course> Courses { get; }
 
 
         public Guid Id { get; set; }
