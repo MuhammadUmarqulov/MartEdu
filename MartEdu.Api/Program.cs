@@ -1,11 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MartEdu.Api
 {
@@ -13,7 +9,27 @@ namespace MartEdu.Api
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            string path = AppDomain.CurrentDomain.BaseDirectory + "Logs\\log.txt";
+            Log.Logger = new LoggerConfiguration().WriteTo.File(
+                    path: path,
+                    outputTemplate: "{Timestamp: yyyy-MM-dd HH:mm:ss } " +
+                    "[{Level:u3}] {Message} {NewLine} {Exception}",
+                    rollingInterval: RollingInterval.Day,
+                    restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information
+                ).CreateLogger();
+            try
+            {
+                Log.Information("Application has been started!");
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception exception)
+            {
+                Log.Fatal(exception, "Application couldn't be started!");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
