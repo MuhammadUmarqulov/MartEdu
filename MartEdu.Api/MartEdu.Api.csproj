@@ -18,7 +18,11 @@
   <ItemGroup>
     <ProjectReference Include="..\MartEdu.Data\MartEdu.Data.csproj" />
     <ProjectReference Include="..\MartEdu.Domain\MartEdu.Domain.csproj" />
-    <ProjectReference Include="..\MartEdu.Services\MartEdu.Services.csproj" />
+    <ProjectReference Include="..\MartEdu.Services\MartEdu.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>

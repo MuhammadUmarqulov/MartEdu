@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace MartEdu.Services.Helpers
+namespace MartEdu.Service.Helpers
 {
     public class HttpContextHelper
     {

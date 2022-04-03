@@ -1,11 +1,15 @@
-﻿using MartEdu.Data.IRepositories;
+﻿using AutoMapper;
+using MartEdu.Data.IRepositories;
 using MartEdu.Domain.Commons;
 using MartEdu.Domain.Configurations;
 using MartEdu.Domain.Entities.Users;
 using MartEdu.Domain.Enums;
-using MartEdu.Services.DTOs.Users;
-using MartEdu.Services.Extensions;
-using MartEdu.Services.Interfaces;
+using MartEdu.Service.DTOs.Users;
+using MartEdu.Service.Extensions;
+using MartEdu.Service.Interfaces;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,22 +17,28 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 
-namespace MartEdu.Services.Services
+namespace MartEdu.Service.Services
 {
     public class UserService : IUserService
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper mapper;
+        private readonly IWebHostEnvironment env;
+        private readonly IConfiguration config;
 
-        public UserService(IUnitOfWork unitOfWork)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment env, IConfiguration config)
         {
             this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
+            this.env = env;
+            this.config = config;
         }
 
         public async Task<BaseResponse<User>> CreateAsync(UserForCreationDto model)
         {
             var response = new BaseResponse<User>();
 
-            var existUser = await unitOfWork.Users.GetAsync(p => p.Email == model.Email);
+            var existUser = await unitOfWork.Users.GetAsync(p => p.Email == model.Email || p.Username == model.Username);
 
             if (existUser is not null)
             {
@@ -44,7 +54,7 @@ namespace MartEdu.Services.Services
                 Email = model.Email,
                 Password = model.Password.Encrypt(),
             };
-            
+
             mappedUser.Create();
 
             var result = await unitOfWork.Users.CreateAsync(mappedUser);
@@ -56,11 +66,11 @@ namespace MartEdu.Services.Services
             return response;
         }
 
-        public async Task<BaseResponse<bool>> DeleteAsync(Guid id)
+        public async Task<BaseResponse<bool>> DeleteAsync(Expression<Func<User, bool>> expression)
         {
             var response = new BaseResponse<bool>();
 
-            var user = await unitOfWork.Users.GetAsync(p => p.Id == id);
+            var user = await unitOfWork.Users.GetAsync(expression);
 
             if (user is null || user.State == ItemState.Deleted)
             {
@@ -132,11 +142,11 @@ namespace MartEdu.Services.Services
             return response;
         }
 
-        public async Task<BaseResponse<User>> Restore(Guid id)
+        public async Task<BaseResponse<User>> Restore(Expression<Func<User, bool>> expression)
         {
             var response = new BaseResponse<User>();
 
-            var user = await unitOfWork.Users.GetAsync(p => p.Id == id);
+            var user = await unitOfWork.Users.GetAsync(expression);
 
             if (user is null)
             {
@@ -174,6 +184,31 @@ namespace MartEdu.Services.Services
             response.Data = user;
 
             return response;
+        }
+
+        public async Task<BaseResponse<User>> SetImage(Expression<Func<User, bool>> expression, IFormFile image)
+        {
+            var response = new BaseResponse<User>();
+
+            var user = await unitOfWork.Users.GetAsync(expression);
+
+            if (user is null)
+            {
+                response.Error = new ErrorResponse(404, "User not found!");
+                return response;
+            }
+
+            user.Image = await FileStreamExtensions.SaveFileAsync(image.OpenReadStream(), image.FileName, env, config);
+
+            user.Update();
+            await unitOfWork.Users.UpdateAsync(user);
+
+            await unitOfWork.SaveChangesAsync();
+
+            response.Data = user;
+
+            return response;
+
         }
     }
 }

@@ -8,6 +8,7 @@ namespace MartEdu.Data.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         public IUserRepository Users { get; }
+        public ICourseRepository Courses { get; }
 
         public MartEduDbContext dbContext;
 
@@ -16,7 +17,7 @@ namespace MartEdu.Data.Repositories
             this.dbContext = dbContext;
 
             Users = new UserRepository(dbContext);
-
+            Courses = new CourseRepository(dbContext);
         }
         public void Dispose()
         {

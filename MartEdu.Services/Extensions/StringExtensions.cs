@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace MartEdu.Services.Extensions
+namespace MartEdu.Service.Extensions
 {
     internal static class StringExtensions
     {

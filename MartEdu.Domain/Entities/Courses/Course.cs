@@ -17,7 +17,7 @@ namespace MartEdu.Domain.Entities.Courses
         public Level Level { get; set; }
         public Section Section { get; set; }
         public IEnumerable<User> Participants { get; set; }
-
+        public string Image { get; set; }
 
         public Guid Id { get; set; }
 

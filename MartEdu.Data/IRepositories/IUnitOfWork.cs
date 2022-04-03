@@ -5,7 +5,8 @@ namespace MartEdu.Data.IRepositories
 {
     public interface IUnitOfWork : IDisposable
     {
-        public IUserRepository Users { get; }
+        IUserRepository Users { get; }
+        ICourseRepository Courses { get; }
 
         Task SaveChangesAsync();
     }

@@ -1,7 +1,7 @@
 ﻿using MartEdu.Data.IRepositories;
 using MartEdu.Data.Repositories;
-using MartEdu.Services.Interfaces;
-using MartEdu.Services.Services;
+using MartEdu.Service.Interfaces;
+using MartEdu.Service.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 
@@ -13,6 +13,7 @@ namespace MartEdu.Api.Extensions
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICourseService, CourseService>();
         }
     }
 }

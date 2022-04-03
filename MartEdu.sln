@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MartEdu.Data", "MartEdu.Dat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MartEdu.Domain", "MartEdu.Domain\MartEdu.Domain.csproj", "{6D7E2A75-78C0-4478-9D5F-109AFFBE9584}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MartEdu.Services", "MartEdu.Services\MartEdu.Services.csproj", "{AB2FBC16-7FA5-4FF0-A4D5-1DF9195FB9DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MartEdu.Service", "MartEdu.Services\MartEdu.Service.csproj", "{AB2FBC16-7FA5-4FF0-A4D5-1DF9195FB9DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

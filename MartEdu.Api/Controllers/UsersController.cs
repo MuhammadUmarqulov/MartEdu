@@ -1,8 +1,9 @@
 ﻿using MartEdu.Domain.Commons;
 using MartEdu.Domain.Configurations;
 using MartEdu.Domain.Entities.Users;
-using MartEdu.Services.DTOs.Users;
-using MartEdu.Services.Interfaces;
+using MartEdu.Service.DTOs.Users;
+using MartEdu.Service.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -57,7 +58,7 @@ namespace MartEdu.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<BaseResponse<User>>> Delete(Guid id)
         {
-            var result = await userService.DeleteAsync(id);
+            var result = await userService.DeleteAsync(p => p.Id == id);
 
             return StatusCode(200, result);
         }
@@ -65,7 +66,7 @@ namespace MartEdu.Api.Controllers
         [HttpPost("restore/{id}")]
         public async Task<ActionResult<BaseResponse<User>>> Restore(Guid id)
         {
-            var result = await userService.Restore(id);
+            var result = await userService.Restore(p => p.Id == id);
 
             return StatusCode(200, result);
         }
@@ -76,6 +77,12 @@ namespace MartEdu.Api.Controllers
             var result = await userService.Login(user);
 
             return StatusCode(200, result);
+        }
+
+        [HttpPost("image/{id}")]
+        public async Task<ActionResult<BaseResponse<User>>> SetImage(Guid id, IFormFile image)
+        {
+            var result = await userService.
         }
 
     }

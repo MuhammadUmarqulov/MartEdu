@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 
-namespace MartEdu.Services.DTOs.Users
+namespace MartEdu.Service.DTOs.Users
 {
     public class UserForCreationDto
     {

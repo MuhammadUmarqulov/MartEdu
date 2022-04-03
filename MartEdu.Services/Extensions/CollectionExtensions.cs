@@ -1,10 +1,10 @@
 ﻿using MartEdu.Domain.Configurations;
-using MartEdu.Services.Helpers;
+using MartEdu.Service.Helpers;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MartEdu.Services.Extensions
+namespace MartEdu.Service.Extensions
 {
     public static class CollectionExtensions
     {
