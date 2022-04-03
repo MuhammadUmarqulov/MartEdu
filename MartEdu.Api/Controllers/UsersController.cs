@@ -3,7 +3,6 @@ using MartEdu.Domain.Configurations;
 using MartEdu.Domain.Entities.Users;
 using MartEdu.Services.DTOs.Users;
 using MartEdu.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -14,11 +13,11 @@ namespace MartEdu.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IUserService userService;
 
-        public UserController(IUserService userService)
+        public UsersController(IUserService userService)
         {
             this.userService = userService;
         }
@@ -71,12 +70,13 @@ namespace MartEdu.Api.Controllers
             return StatusCode(200, result);
         }
 
-        //[HttpPost("set-image")]
-        //public async Task<Action<BaseResponse<User>>> SetImage(Guid id, IFormFile image)
-        //{
-        //    var result = await userService.SetImage(id);
+        [HttpPost("login")]
+        public async Task<ActionResult<BaseResponse<User>>> Login(UserForLoginDto user)
+        {
+            var result = await userService.Login(user);
 
-        //    return StatusCode(200, result);
-        //}
+            return StatusCode(200, result);
+        }
+
     }
 }

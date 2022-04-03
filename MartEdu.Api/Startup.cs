@@ -1,5 +1,5 @@
-using MartEdu.Data.Contexts;
 using MartEdu.Api.Extensions;
+using MartEdu.Data.Contexts;
 using MartEdu.Services.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

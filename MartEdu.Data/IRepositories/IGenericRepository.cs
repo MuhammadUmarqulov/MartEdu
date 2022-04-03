@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MartEdu.Data.IRepositories
 {
-    public interface IGenericRepository <T> where T : class 
+    public interface IGenericRepository<T> where T : class
     {
         Task<T> CreateAsync(T entity);
         Task<T> UpdateAsync(T entity);

@@ -1,7 +1,7 @@
 ﻿using MartEdu.Domain.Commons;
+using MartEdu.Domain.Entities.Users;
 using MartEdu.Domain.Enums;
 using MartEdu.Domain.Enums.Courses;
-using MartEdu.Domain.Entities.Users;
 using System;
 using System.Collections.Generic;
 

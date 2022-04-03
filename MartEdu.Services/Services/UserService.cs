@@ -12,6 +12,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
+
 namespace MartEdu.Services.Services
 {
     public class UserService : IUserService
@@ -27,7 +28,6 @@ namespace MartEdu.Services.Services
         {
             var response = new BaseResponse<User>();
 
-
             var existUser = await unitOfWork.Users.GetAsync(p => p.Email == model.Email);
 
             if (existUser is not null)
@@ -41,8 +41,10 @@ namespace MartEdu.Services.Services
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                Email = model.Email
+                Email = model.Email,
+                Password = model.Password.Encrypt(),
             };
+            
             mappedUser.Create();
 
             var result = await unitOfWork.Users.CreateAsync(mappedUser);
@@ -153,9 +155,25 @@ namespace MartEdu.Services.Services
             return response;
         }
 
-        public Task<BaseResponse<User>> SetImage(Guid id)
+        public async Task<BaseResponse<User>> Login(UserForLoginDto loginDto)
         {
-            throw new NotImplementedException();
+            var response = new BaseResponse<User>();
+
+            var encryptedPassword = loginDto.Password.Encrypt();
+
+            var user = await unitOfWork.Users
+                                .GetAsync(p => (p.Username == loginDto.EmailOrUsername || p.Email == loginDto.EmailOrUsername)
+                                            && p.Password == encryptedPassword);
+
+            if (user is null)
+            {
+                response.Error = new ErrorResponse(404, "User not found!");
+                return response;
+            }
+
+            response.Data = user;
+
+            return response;
         }
     }
 }

@@ -17,6 +17,6 @@ namespace MartEdu.Services.Interfaces
         Task<BaseResponse<User>> GetAsync(Expression<Func<User, bool>> expression);
         Task<BaseResponse<IEnumerable<User>>> GetAllAsync(PaginationParams @params, Expression<Func<User, bool>> expression = null);
         Task<BaseResponse<User>> Restore(Guid id);
-        Task<BaseResponse<User>> SetImage(Guid id);
+        Task<BaseResponse<User>> Login(UserForLoginDto loginDto);
     }
 }
