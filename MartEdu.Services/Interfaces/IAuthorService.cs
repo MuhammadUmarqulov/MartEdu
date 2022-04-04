@@ -17,8 +17,12 @@ namespace MartEdu.Service.Interfaces
         Task<BaseResponse<bool>> DeleteAsync(Expression<Func<Author, bool>> expression);
         Task<BaseResponse<Author>> GetAsync(Expression<Func<Author, bool>> expression);
         Task<BaseResponse<IEnumerable<Author>>> GetAllAsync(PaginationParams @params, Expression<Func<Author, bool>> expression = null);
-        Task<BaseResponse<Author>> Restore(Expression<Func<Author, bool>> expression);
-        Task<BaseResponse<Author>> Login(AuthorForLoginDto loginDto);
-        Task<BaseResponse<Author>> SetImage(Expression<Func<Author, bool>> expression, IFormFile image);
+        Task<BaseResponse<Author>> RestoreAsync(Expression<Func<Author, bool>> expression);
+        Task<BaseResponse<Author>> LoginAsync(AuthorForLoginDto loginDto);
+        Task<BaseResponse<Author>> SetBackgroundImageAsync(Expression<Func<Author, bool>> expression, IFormFile image);
+        Task<BaseResponse<Author>> SetProfileImageAsync(Expression<Func<Author, bool>> expression, IFormFile image);
+        Task<BaseResponse<Author>> DeleteBackgroundImageAsync(Expression<Func<Author, bool>> expression);
+        Task<BaseResponse<Author>> DeleteProfileImageAsync(Expression<Func<Author, bool>> expression);   
+        Task<BaseResponse<Author>> VoteAsync(int vote, Expression<Func<Author, bool>> expression);
     }
 }

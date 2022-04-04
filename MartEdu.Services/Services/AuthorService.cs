@@ -83,11 +83,57 @@ namespace MartEdu.Service.Services
             return response;
         }
 
+        public async Task<BaseResponse<Author>> DeleteBackgroundImageAsync(Expression<Func<Author, bool>> expression)
+        {
+            var response = new BaseResponse<Author>();
+
+            var author = await unitOfWork.Authors.GetAsync(expression);
+
+            if (author is null)
+            {
+                response.Error = new ErrorResponse(404, "Author not found!");
+                return response;
+            }
+
+            author.BackgroundImage = null;
+            author.Update();
+
+            unitOfWork.Authors.Update(author);
+
+            response.Data = author;
+
+            return response;
+        }
+
+        public async Task<BaseResponse<Author>> DeleteProfileImageAsync(Expression<Func<Author, bool>> expression)
+        {
+            var response = new BaseResponse<Author>();
+
+            var author = await unitOfWork.Authors.GetAsync(expression);
+
+            if (author is null)
+            {
+                response.Error = new ErrorResponse(404, "Author not found!");
+                return response;
+            }
+
+            author.ProfileImage = null;
+
+            author.Update();
+            unitOfWork.Authors.Update(author);
+
+            await unitOfWork.SaveChangesAsync();
+
+            response.Data = author;
+
+            return response;
+        }
+
         public async Task<BaseResponse<IEnumerable<Author>>> GetAllAsync(PaginationParams @params, Expression<Func<Author, bool>> expression = null)
         {
             var response = new BaseResponse<IEnumerable<Author>>();
 
-            var authors = await unitOfWork.Authors.WhereAsync(expression);
+            var authors = unitOfWork.Authors.Where(expression);
 
             authors = authors.Where(p => p.State != ItemState.Deleted);
 
@@ -113,7 +159,7 @@ namespace MartEdu.Service.Services
             return response;
         }
 
-        public async Task<BaseResponse<Author>> Login(AuthorForLoginDto loginDto)
+        public async Task<BaseResponse<Author>> LoginAsync(AuthorForLoginDto loginDto)
         {
             var response = new BaseResponse<Author>();
 
@@ -133,7 +179,7 @@ namespace MartEdu.Service.Services
             return response;
         }
 
-        public async Task<BaseResponse<Author>> Restore(Expression<Func<Author, bool>> expression)
+        public async Task<BaseResponse<Author>> RestoreAsync(Expression<Func<Author, bool>> expression)
         {
             var response = new BaseResponse<Author>();
 
@@ -147,7 +193,7 @@ namespace MartEdu.Service.Services
 
             author.Update();
 
-            await unitOfWork.Authors.UpdateAsync(author);
+            unitOfWork.Authors.Update(author);
 
             await unitOfWork.SaveChangesAsync();
 
@@ -156,7 +202,7 @@ namespace MartEdu.Service.Services
             return response;
         }
 
-        public async Task<BaseResponse<Author>> SetImage(Expression<Func<Author, bool>> expression, IFormFile image)
+        public async Task<BaseResponse<Author>> SetBackgroundImageAsync(Expression<Func<Author, bool>> expression, IFormFile image)
         {
             var response = new BaseResponse<Author>();
 
@@ -171,7 +217,31 @@ namespace MartEdu.Service.Services
             author.BackgroundImage = await FileStreamExtensions.SaveFileAsync(image.OpenReadStream(), image.FileName, env, config);
 
             author.Update();
-            await unitOfWork.Authors.UpdateAsync(author);
+            unitOfWork.Authors.Update(author);
+
+            await unitOfWork.SaveChangesAsync();
+
+            response.Data = author;
+
+            return response;
+        }
+
+        public async Task<BaseResponse<Author>> SetProfileImageAsync(Expression<Func<Author, bool>> expression, IFormFile image)
+        {
+            var response = new BaseResponse<Author>();
+
+            var author = await unitOfWork.Authors.GetAsync(expression);
+
+            if (author is null)
+            {
+                response.Error = new ErrorResponse(404, "Author not found!");
+                return response;
+            }
+
+            author.ProfileImage = await FileStreamExtensions.SaveFileAsync(image.OpenReadStream(), image.FileName, env, config);
+
+            author.Update();
+            unitOfWork.Authors.Update(author);
 
             await unitOfWork.SaveChangesAsync();
 
@@ -198,11 +268,37 @@ namespace MartEdu.Service.Services
             
             author.Update();
 
-            var result = await unitOfWork.Authors.UpdateAsync(author);
+            var result = unitOfWork.Authors.Update(author);
 
             await unitOfWork.SaveChangesAsync();
 
             response.Data = result;
+
+            return response;
+        }
+
+        public async Task<BaseResponse<Author>> VoteAsync(int vote, Expression<Func<Author, bool>> expression)
+        {
+            var response = new BaseResponse<Author>();
+
+            var author = await unitOfWork.Authors.GetAsync(expression);
+
+            if (author is null)
+            {
+                response.Error = new ErrorResponse(404, "Author not found!");
+                return response;
+            }
+
+            author.Score += vote;
+            author.CountOfVotes++;
+
+
+            author.Update();
+            unitOfWork.Authors.Update(author);
+
+            await unitOfWork.SaveChangesAsync();
+
+            response.Data = author;
 
             return response;
         }

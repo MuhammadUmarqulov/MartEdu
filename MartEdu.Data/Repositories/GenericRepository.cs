@@ -42,14 +42,14 @@ namespace MartEdu.Data.Repositories
 
         public async Task<T> GetAsync(Expression<Func<T, bool>> expression)
         {
-            return (await WhereAsync(expression)).FirstOrDefault();
+            return (Where(expression)).FirstOrDefault();
         }
 
-        public async Task<T> UpdateAsync(T entity) => dbSet.Update(entity).Entity;
+        public T Update(T entity) => dbSet.Update(entity).Entity;
 
-        public async Task<IQueryable<T>> WhereAsync(Expression<Func<T, bool>> expression = null)
-        {
-            return expression is null ? dbSet : dbSet.Where(expression);
-        }
+        
+        public IQueryable<T> Where(Expression<Func<T, bool>> expression = null)
+            => expression is null ? dbSet : dbSet.Where(expression);
+        
     }
 }

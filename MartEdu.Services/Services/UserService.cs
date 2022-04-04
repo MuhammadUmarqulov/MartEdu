@@ -102,7 +102,7 @@ namespace MartEdu.Service.Services
         {
             var response = new BaseResponse<IEnumerable<User>>();
 
-            var users = await unitOfWork.Users.WhereAsync(expression);
+            var users = unitOfWork.Users.Where(expression);
 
             users = users.Where(p => p.State != ItemState.Deleted);
 
@@ -129,7 +129,7 @@ namespace MartEdu.Service.Services
             user.Password = model.Password.Encrypt();
             user.Update();
 
-            var result = await unitOfWork.Users.UpdateAsync(user);
+            var result = unitOfWork.Users.Update(user);
 
             await unitOfWork.SaveChangesAsync();
 
@@ -152,7 +152,7 @@ namespace MartEdu.Service.Services
 
             user.Update();
 
-            await unitOfWork.Users.UpdateAsync(user);
+            unitOfWork.Users.Update(user);
 
             await unitOfWork.SaveChangesAsync();
 
@@ -197,7 +197,7 @@ namespace MartEdu.Service.Services
             user.Image = await FileStreamExtensions.SaveFileAsync(image.OpenReadStream(), image.FileName, env, config);
 
             user.Update();
-            await unitOfWork.Users.UpdateAsync(user);
+            unitOfWork.Users.Update(user);
 
             await unitOfWork.SaveChangesAsync();
 

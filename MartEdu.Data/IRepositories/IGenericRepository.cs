@@ -9,9 +9,9 @@ namespace MartEdu.Data.IRepositories
     public interface IGenericRepository<T> where T : class
     {
         Task<T> CreateAsync(T entity);
-        Task<T> UpdateAsync(T entity);
+        T Update(T entity);
         Task<bool> DeleteAsync(Expression<Func<T, bool>> expression);
         Task<T> GetAsync(Expression<Func<T, bool>> expression);
-        Task<IQueryable<T>> WhereAsync(Expression<Func<T, bool>> expression = null);
+        IQueryable<T> Where(Expression<Func<T, bool>> expression = null);
     }
 }

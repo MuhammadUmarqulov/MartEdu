@@ -73,7 +73,7 @@ namespace MartEdu.Service.Services
 
             existCourse.Delete();
 
-            await unitOfWork.Courses.UpdateAsync(existCourse);
+            unitOfWork.Courses.Update(existCourse);
 
             await unitOfWork.SaveChangesAsync();
 
@@ -86,7 +86,7 @@ namespace MartEdu.Service.Services
         {
             var response = new BaseResponse<IEnumerable<Course>>();
 
-            var courses = await unitOfWork.Courses.WhereAsync(expression);
+            var courses = unitOfWork.Courses.Where(expression);
 
             courses = courses.Where(p => p.State != ItemState.Deleted);
 
@@ -127,7 +127,7 @@ namespace MartEdu.Service.Services
 
             course.Update();
 
-            await unitOfWork.Courses.UpdateAsync(course);
+            unitOfWork.Courses.Update(course);
 
             await unitOfWork.SaveChangesAsync();
 
@@ -158,7 +158,7 @@ namespace MartEdu.Service.Services
 
             course.Update();
 
-            var result = await unitOfWork.Courses.UpdateAsync(course);
+            var result = unitOfWork.Courses.Update(course);
 
             await unitOfWork.SaveChangesAsync();
 
@@ -187,11 +187,11 @@ namespace MartEdu.Service.Services
 
             user.Courses.Add(course);
             user.Update();
-            await unitOfWork.Users.UpdateAsync(user);
+            unitOfWork.Users.Update(user);
 
             course.Participants.Add(user);
             course.Update();
-            await unitOfWork.Courses.UpdateAsync(course);
+            unitOfWork.Courses.Update(course);
 
             await unitOfWork.SaveChangesAsync();
 

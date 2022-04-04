@@ -41,7 +41,7 @@ namespace MartEdu.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<BaseResponse<Author>>> Create([FromForm] AuthorForCreationDto course)
+        public async Task<ActionResult<BaseResponse<Author>>> Create(AuthorForCreationDto course)
         {
             var result = await authorService.CreateAsync(course);
 
@@ -67,15 +67,31 @@ namespace MartEdu.Api.Controllers
         [HttpPost("Restore/{id}")]
         public async Task<ActionResult<BaseResponse<Author>>> Restore(Guid id)
         {
-            var result = await authorService.Restore(p => p.Id == id);
+            var result = await authorService.RestoreAsync(p => p.Id == id);
 
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
         }
 
-        [HttpPost("Image/{id}")]
-        public async Task<ActionResult<BaseResponse<Author>>> SetImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
+        [HttpPost("Image/Profile/{id}")]
+        public async Task<ActionResult<BaseResponse<Author>>> SetProfileImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
         {
-            var result = await authorService.SetImage(p => p.Id == id, image);
+            var result = await authorService.SetProfileImageAsync(p => p.Id == id, image);
+
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
+        }
+
+        [HttpPost("Image/Background/{id}")]
+        public async Task<ActionResult<BaseResponse<Author>>> SetBackgroundImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
+        {
+            var result = await authorService.SetBackgroundImageAsync(p => p.Id == id, image);
+                
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
+        }
+
+        [HttpPost("Vote/{id}")]
+        public async Task<ActionResult<BaseResponse<Author>>> Vote(Guid id, int vote)
+        {
+            var result = await authorService.VoteAsync(vote, p => p.Id == id);
 
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }

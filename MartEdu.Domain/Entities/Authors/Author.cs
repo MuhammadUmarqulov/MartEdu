@@ -4,6 +4,7 @@ using MartEdu.Domain.Enums;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MartEdu.Domain.Entities.Authors
 {
@@ -15,8 +16,16 @@ namespace MartEdu.Domain.Entities.Authors
             
         [JsonIgnore]
         public string Password { get; set; }
+
+        [JsonIgnore]
         public long Score { get; set; }
+
+        [JsonIgnore]    
         public int CountOfVotes { get; set; }
+
+        [NotMapped]
+        public float VoteScore { get => (float)this.Score / (float)this.CountOfVotes; }
+
         public string ProfileImage { get; set; }
         public string BackgroundImage { get; set; }
         public IEnumerable<Course> Courses { get; set; }
