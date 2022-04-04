@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace MartEdu.Api.Controllers
@@ -88,8 +89,24 @@ namespace MartEdu.Api.Controllers
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }
 
+        [HttpDelete("Image/Profile/{id}")]
+        public async Task<ActionResult<BaseResponse<Author>>> DeleteProfileImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
+        {
+            var result = await authorService.DeleteProfileImageAsync(p => p.Id == id);
+
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
+        }
+
+        [HttpDelete("Image/Background/{id}")]
+        public async Task<ActionResult<BaseResponse<Author>>> DeleteBackgroundImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
+        {
+            var result = await authorService.DeleteBackgroundImageAsync(p => p.Id == id);
+
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
+        }
+
         [HttpPost("Vote/{id}")]
-        public async Task<ActionResult<BaseResponse<Author>>> Vote(Guid id, int vote)
+        public async Task<ActionResult<BaseResponse<Author>>> Vote(Guid id, [Required] int vote)
         {
             var result = await authorService.VoteAsync(vote, p => p.Id == id);
 
