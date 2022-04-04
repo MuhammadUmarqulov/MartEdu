@@ -19,7 +19,7 @@ namespace MartEdu.Api.Controllers
         {
         }
 
-        [HttpPost]
+        [HttpPost()]
         public async override Task<ActionResult<BaseResponse<Course>>> Create([FromForm] CourseForCreationDto creationDto)
         {
             var result = await service.CreateAsync(creationDto, p => p.Name == creationDto.Name);
@@ -27,10 +27,10 @@ namespace MartEdu.Api.Controllers
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }
 
-        [HttpPost("register/{userId}&{courseId}")]
-        public async Task<ActionResult<BaseResponse<Course>>> Register(Guid userId, Guid courseId)
+        [HttpPost("{id}/register/{userId}")]
+        public async Task<ActionResult<BaseResponse<Course>>> Register(Guid id, Guid userId)
         {
-            var result = await service.RegisterForCourseAsync(userId, courseId);
+            var result = await service.RegisterForCourseAsync(userId, id);
 
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }

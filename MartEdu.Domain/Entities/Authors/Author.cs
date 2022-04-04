@@ -10,9 +10,17 @@ namespace MartEdu.Domain.Entities.Authors
 {
     public class Author : IAuditable
     {
+        public Author()
+        {
+            Courses = new List<Course>();
+        }
         public string Name { get; set; }
         public string Bio { get; set; }
         public string Email { get; set; }
+        public string ProfileImage { get; set; }
+        public string BackgroundImage { get; set; }
+        public virtual ICollection<Course> Courses { get; set; }
+
 
         [JsonIgnore]
         public string Password { get; set; }
@@ -26,10 +34,7 @@ namespace MartEdu.Domain.Entities.Authors
         [NotMapped]
         public float VoteScore { get => Score / (float)this.CountOfVotes; }
 
-        public string ProfileImage { get; set; }
-        public string BackgroundImage { get; set; }
-        public IEnumerable<Course> Courses { get; set; }
-
+       
         public Guid Id { get; set; }
 
         public DateTime CreatedAt { get; set; }

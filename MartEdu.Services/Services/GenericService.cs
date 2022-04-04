@@ -144,8 +144,8 @@ namespace MartEdu.Service.Services
                 return response;
             }
 
-            //Mapper.Map<TSourceForCreationDto, TSource>(model, source);
-            //Todo
+            source = mapper.Map(model, source);
+            
             source.Update();
 
             var result = repository.Update(source);

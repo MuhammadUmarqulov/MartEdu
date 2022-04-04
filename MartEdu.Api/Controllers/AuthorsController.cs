@@ -1,6 +1,7 @@
 ﻿using MartEdu.Domain.Commons;
 using MartEdu.Domain.Configurations;
 using MartEdu.Domain.Entities.Authors;
+using MartEdu.Domain.Entities.Courses;
 using MartEdu.Domain.Enums;
 using MartEdu.Service.DTOs.Authors;
 using MartEdu.Service.Extensions.Attributes;
@@ -22,39 +23,39 @@ namespace MartEdu.Api.Controllers
         {
         }
 
-        [HttpPost("image/profile/{id}")]
-        public async Task<ActionResult<BaseResponse<Author>>> SetProfileImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
+        [HttpPost("{id}/image/profile")]
+        public async Task<ActionResult<BaseResponse<Author>>> SetProfileImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5)] IFormFile image)
         {
             var result = await service.SetProfileImageAsync(p => p.Id == id, image);
 
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }
 
-        [HttpPost("image/background/{id}")]
-        public async Task<ActionResult<BaseResponse<Author>>> SetBackgroundImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
+        [HttpPost("{id}/image/background/")]
+        public async Task<ActionResult<BaseResponse<Author>>> SetBackgroundImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5)] IFormFile image)
         {
             var result = await service.SetBackgroundImageAsync(p => p.Id == id, image);
 
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }
 
-        [HttpDelete("image/profile/{id}")]
-        public async Task<ActionResult<BaseResponse<Author>>> DeleteProfileImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
+        [HttpDelete("{id}/image/profile/")]
+        public async Task<ActionResult<BaseResponse<Author>>> DeleteProfileImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5)] IFormFile image)
         {
             var result = await service.DeleteProfileImageAsync(p => p.Id == id);
 
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }
 
-        [HttpDelete("image/background/{id}")]
-        public async Task<ActionResult<BaseResponse<Author>>> DeleteBackgroundImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
+        [HttpDelete("{id}/image/background/")]
+        public async Task<ActionResult<BaseResponse<Author>>> DeleteBackgroundImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5)] IFormFile image)
         {
             var result = await service.DeleteBackgroundImageAsync(p => p.Id == id);
 
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }
 
-        [HttpPost("vote/{id}")]
+        [HttpPost("{id}/vote/")]
         public async Task<ActionResult<BaseResponse<Author>>> Vote(Guid id, [Required] int vote)
         {
             var result = await service.VoteAsync(vote, p => p.Id == id);
@@ -63,11 +64,28 @@ namespace MartEdu.Api.Controllers
         }
 
         [HttpPost]
-        public override async Task<ActionResult<BaseResponse<Author>>> Create([FromBody]AuthorForCreationDto creationDto)
+        public override async Task<ActionResult<BaseResponse<Author>>> Create([FromBody] AuthorForCreationDto creationDto)
         {
             var result = await service.CreateAsync(creationDto, p => p.Email == creationDto.Email);
 
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }
+
+        [HttpPost("{id}/courses/{courseId}")]
+        public async Task<ActionResult<BaseResponse<Author>>> AddCourse(Guid id, Guid courseId)
+        {
+            var result = await service.AddCourseAsync(id, courseId);
+            
+            return result;
+        }
+        
+        [HttpGet("{id}/courses/{courseId}")]
+        public async Task<ActionResult<BaseResponse<Author>>> GetCourse(Guid id, Guid courseId)
+        {
+            var result = await service.GetAsync(p => p.Id == id);   
+            
+            return result;
+        }
+
     }
 }

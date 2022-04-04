@@ -37,8 +37,8 @@ namespace MartEdu.Api.Controllers
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }
 
-        [HttpPost("image/{id}")]
-        public async Task<ActionResult<BaseResponse<User>>> SetImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
+        [HttpPost("{id}/image")]
+        public async Task<ActionResult<BaseResponse<User>>> SetImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5)] IFormFile image)
         {
             var result = await service.SetImageAsync(p => p.Id == id, image);
 

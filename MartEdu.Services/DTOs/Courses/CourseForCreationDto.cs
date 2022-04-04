@@ -12,7 +12,7 @@ namespace MartEdu.Service.DTOs.Courses
         public Level Level { get; set; }
         public Section Section { get; set; }
 
-        [FormFileExtensions(".jpg", ".png"), MaxFileSize(5 * 1024 * 1024)]
+        [FormFileExtensions(".jpg", ".png"), MaxFileSize(5)]
         public IFormFile Image { get; set; }
     }
 }

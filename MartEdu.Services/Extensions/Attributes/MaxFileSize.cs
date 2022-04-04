@@ -9,7 +9,7 @@ namespace MartEdu.Service.Extensions.Attributes
         private readonly int _maxFileSize;
         public MaxFileSize(int maxFileSize)
         {
-            _maxFileSize = maxFileSize;
+            _maxFileSize = maxFileSize * 1024 * 1024;
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)

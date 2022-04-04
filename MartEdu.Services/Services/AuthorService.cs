@@ -26,6 +26,37 @@ namespace MartEdu.Service.Services
             ) : base(unitOfWork, mapper, env, config, repository)
         {
         }
+
+        public async Task<BaseResponse<Author>> AddCourseAsync(Guid authorId, Guid courseId)
+        {
+            var response = new BaseResponse<Author>();
+
+            var author = await unitOfWork.Authors.GetAsync(p => p.Id == authorId);
+
+            if (author is null)
+            {
+                response.Error = new ErrorResponse(404, "Author not found!");
+                return response;
+            }
+
+            var course = await unitOfWork.Courses.GetAsync(p => p.Id == courseId);
+
+            if (course is null)
+            {
+                response.Error = new ErrorResponse(404, "Course not found!");
+                return response;
+            }
+
+            author.Courses.Add(course);
+            author.Update();
+
+            unitOfWork.Authors.Update(author);
+
+            response.Data = author;
+
+            return response;
+        }
+
         public async Task<BaseResponse<Author>> DeleteBackgroundImageAsync(Expression<Func<Author, bool>> expression)
         {
             var response = new BaseResponse<Author>();

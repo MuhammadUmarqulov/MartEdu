@@ -16,5 +16,6 @@ namespace MartEdu.Service.Interfaces
         Task<BaseResponse<Author>> DeleteBackgroundImageAsync(Expression<Func<Author, bool>> expression);
         Task<BaseResponse<Author>> DeleteProfileImageAsync(Expression<Func<Author, bool>> expression);
         Task<BaseResponse<Author>> VoteAsync(int vote, Expression<Func<Author, bool>> expression);
+        Task<BaseResponse<Author>> AddCourseAsync(Guid authorId, Guid courseId);
     }
 }

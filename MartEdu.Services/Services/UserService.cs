@@ -50,7 +50,7 @@ namespace MartEdu.Service.Services
             return response;
         }
 
-        public async Task<BaseResponse<User>> SetImageAsync(Expression<Func<User, bool>> expression, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
+        public async Task<BaseResponse<User>> SetImageAsync(Expression<Func<User, bool>> expression, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5)] IFormFile image)
         {
             var response = new BaseResponse<User>();
 

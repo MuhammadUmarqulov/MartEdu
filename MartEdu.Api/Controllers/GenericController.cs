@@ -21,7 +21,7 @@ namespace MartEdu.Api.Controllers
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult<BaseResponse<IEnumerable<TSource>>>> GetAll(PaginationParams @params)
+        public virtual async Task<ActionResult<BaseResponse<IEnumerable<TSource>>>> GetAll([FromQuery] PaginationParams @params)
         {
             var result = await service.GetAllAsync(@params);
 
@@ -29,7 +29,7 @@ namespace MartEdu.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public virtual async Task<ActionResult<BaseResponse<TSource>>> Get(Guid id)
+        public virtual async Task<ActionResult<BaseResponse<TSource>>> Get([FromQuery] Guid id)
         {
             var result = await service.GetAsync(p => p.Id == id);
 
@@ -56,7 +56,7 @@ namespace MartEdu.Api.Controllers
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }
 
-        [HttpPost("restore/{id}")]
+        [HttpPost("{id}/restore")]
         public virtual async Task<ActionResult<BaseResponse<TSource>>> Restore(Guid id)
         {
             var result = await service.RestoreAsync(p => p.Id == id);
