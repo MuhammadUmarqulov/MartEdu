@@ -45,12 +45,7 @@ namespace MartEdu.Data.Repositories
             return (await WhereAsync(expression)).FirstOrDefault();
         }
 
-        public async Task<T> UpdateAsync(T entity)
-        {
-            var entry = dbSet.Update(entity);
-
-            return entry.Entity;
-        }
+        public async Task<T> UpdateAsync(T entity) => dbSet.Update(entity).Entity;
 
         public async Task<IQueryable<T>> WhereAsync(Expression<Func<T, bool>> expression = null)
         {

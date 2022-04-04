@@ -3,7 +3,9 @@ using MartEdu.Domain.Configurations;
 using MartEdu.Domain.Entities.Authors;
 using MartEdu.Domain.Enums;
 using MartEdu.Service.DTOs.Authors;
+using MartEdu.Service.Extensions.Attributes;
 using MartEdu.Service.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -62,12 +64,20 @@ namespace MartEdu.Api.Controllers
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
         }
 
-        [HttpPost("restore/{id}")]
+        [HttpPost("Restore/{id}")]
         public async Task<ActionResult<BaseResponse<Author>>> Restore(Guid id)
         {
             var result = await authorService.Restore(p => p.Id == id);
 
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
+        }
+
+        [HttpPost("Image/{id}")]
+        public async Task<ActionResult<BaseResponse<Author>>> SetImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
+        {
+            var result = await authorService.SetImage(p => p.Id == id, image);
+
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }
     }
 }

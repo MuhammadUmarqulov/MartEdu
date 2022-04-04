@@ -1,4 +1,5 @@
 ﻿using MartEdu.Domain.Enums.Courses;
+using MartEdu.Service.Extensions.Attributes;
 using Microsoft.AspNetCore.Http;
 
 namespace MartEdu.Service.DTOs.Courses
@@ -10,6 +11,8 @@ namespace MartEdu.Service.DTOs.Courses
         public Hashtag Teg { get; set; }
         public Level Level { get; set; }
         public Section Section { get; set; }
+
+        [FormFileExtensions(".jpg", ".png"), MaxFileSize(5 * 1024 * 1024)]
         public IFormFile Image { get; set; }
     }
 }

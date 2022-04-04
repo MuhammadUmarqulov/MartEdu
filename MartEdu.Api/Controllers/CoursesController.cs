@@ -62,7 +62,7 @@ namespace MartEdu.Api.Controllers
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
         }
 
-        [HttpPost("restore/{id}")]
+        [HttpPost("Restore/{id}")]
         public async Task<ActionResult<BaseResponse<Course>>> Restore(Guid id)
         {
             var result = await courseService.Restore(p => p.Id == id);
@@ -70,7 +70,7 @@ namespace MartEdu.Api.Controllers
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
         }
 
-        [HttpPost("register/{userId}&{courseId}")]
+        [HttpPost("Register/{userId}&{courseId}")]
         public async Task<ActionResult<BaseResponse<Course>>> Register(Guid userId, Guid courseId)
         {
             var result = await courseService.RegisterForCourse(userId, courseId);

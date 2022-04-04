@@ -2,6 +2,7 @@
 using MartEdu.Domain.Configurations;
 using MartEdu.Domain.Entities.Users;
 using MartEdu.Service.DTOs.Users;
+using MartEdu.Service.Extensions.Attributes;
 using MartEdu.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -63,7 +64,7 @@ namespace MartEdu.Api.Controllers
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
         }
 
-        [HttpPost("restore/{id}")]
+        [HttpPost("Restore/{id}")]
         public async Task<ActionResult<BaseResponse<User>>> Restore(Guid id)
         {
             var result = await userService.Restore(p => p.Id == id);
@@ -71,7 +72,7 @@ namespace MartEdu.Api.Controllers
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
         }
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public async Task<ActionResult<BaseResponse<User>>> Login(UserForLoginDto user)
         {
             var result = await userService.Login(user);
@@ -79,8 +80,8 @@ namespace MartEdu.Api.Controllers
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
         }
 
-        [HttpPost("image/{id}")]
-        public async Task<ActionResult<BaseResponse<User>>> SetImage(Guid id, IFormFile image)
+        [HttpPost("Image/{id}")]
+        public async Task<ActionResult<BaseResponse<User>>> SetImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5*1024*1024)] IFormFile image)
         {
             var result = await userService.SetImage(p => p.Id == id, image);
 

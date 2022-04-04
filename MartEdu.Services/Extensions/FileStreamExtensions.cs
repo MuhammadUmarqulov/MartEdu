@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using MartEdu.Service.Helpers;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
@@ -10,17 +12,22 @@ namespace MartEdu.Service.Extensions
     {
         public static async Task<string> SaveFileAsync(this Stream file, string fileName, IWebHostEnvironment env, IConfiguration config)
         {
+            string hostUrl = HttpContextHelper.Context?.Request?.Scheme + "://" + HttpContextHelper.Context?.Request?.Host.Value;
+
+
             fileName = Guid.NewGuid().ToString("N") + "_" + fileName;
 
             string storagePath = config.GetSection("Storage:ImageUrl").Value;
             string filePath = Path.Combine(env.WebRootPath, $"{storagePath}/{fileName}");
-
             FileStream mainFile = File.Create(filePath);
+
+            string webUrl = $@"{hostUrl}/{storagePath}/{fileName}";
+                
 
             await file.CopyToAsync(mainFile);
             mainFile.Close();
 
-            return fileName;
+            return webUrl;
         }
     }
 }

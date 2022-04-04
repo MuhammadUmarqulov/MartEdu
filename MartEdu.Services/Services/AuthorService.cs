@@ -6,6 +6,7 @@ using MartEdu.Domain.Entities.Authors;
 using MartEdu.Domain.Enums;
 using MartEdu.Service.DTOs.Authors;
 using MartEdu.Service.Extensions;
+using MartEdu.Service.Helpers;
 using MartEdu.Service.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -24,6 +25,7 @@ namespace MartEdu.Service.Services
         private readonly IMapper mapper;
         private readonly IWebHostEnvironment env;
         private readonly IConfiguration config;
+        private readonly HttpContextHelper httpContextHelper;
 
         public AuthorService(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment env, IConfiguration config)
         {
@@ -31,6 +33,7 @@ namespace MartEdu.Service.Services
             this.mapper = mapper;
             this.env = env;
             this.config = config;
+            this.httpContextHelper = new HttpContextHelper();
         }
 
         public async Task<BaseResponse<Author>> CreateAsync(AuthorForCreationDto model)

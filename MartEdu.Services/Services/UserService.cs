@@ -6,6 +6,7 @@ using MartEdu.Domain.Entities.Users;
 using MartEdu.Domain.Enums;
 using MartEdu.Service.DTOs.Users;
 using MartEdu.Service.Extensions;
+using MartEdu.Service.Extensions.Attributes;
 using MartEdu.Service.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -181,7 +182,7 @@ namespace MartEdu.Service.Services
             return response;
         }
 
-        public async Task<BaseResponse<User>> SetImage(Expression<Func<User, bool>> expression, IFormFile image)
+        public async Task<BaseResponse<User>> SetImage(Expression<Func<User, bool>> expression, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
         {
             var response = new BaseResponse<User>();
 

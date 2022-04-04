@@ -12,7 +12,7 @@ namespace MartEdu.Domain.Entities.Authors
         public string Name { get; set; }
         public string Bio { get; set; }
         public string Email { get; set; }
-
+            
         [JsonIgnore]
         public string Password { get; set; }
         public long Score { get; set; }
