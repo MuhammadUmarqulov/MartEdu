@@ -36,7 +36,6 @@ namespace MartEdu.Domain.Entities.Courses
 
         public ItemState State { get; set; }
 
-
         public void Create()
         {
             this.CreatedAt = DateTime.Now;

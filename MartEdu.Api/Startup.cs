@@ -34,7 +34,7 @@ namespace MartEdu.Api
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Depl", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MartEducation", Version = "v1" });
             });
 
 
@@ -54,9 +54,9 @@ namespace MartEdu.Api
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Depl v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MartEducation v1"));
             }
-
+            
             if (app.ApplicationServices.GetService<IHttpContextAccessor>() != null)
             {
                 HttpContextHelper.Accessor = app.ApplicationServices.GetRequiredService<IHttpContextAccessor>();

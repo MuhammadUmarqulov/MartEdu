@@ -3,6 +3,7 @@ using MartEdu.Domain.Entities.Courses;
 using MartEdu.Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace MartEdu.Data.Contexts
 {
     public class MartEduDbContext : DbContext

@@ -11,8 +11,10 @@ namespace MartEdu.Domain.Commons
         Guid? UpdatedBy { get; set; }
         ItemState State { get; set; }
 
-        void Create();
-        void Update();
-        void Delete();
+        public void Create();
+
+        public void Update();
+
+        public void Delete();
     }
 }

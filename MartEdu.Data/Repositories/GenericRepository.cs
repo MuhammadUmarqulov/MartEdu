@@ -1,5 +1,6 @@
 ﻿using MartEdu.Data.Contexts;
 using MartEdu.Data.IRepositories;
+using MartEdu.Domain.Commons;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MartEdu.Data.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : class, IAuditable
     {
         internal MartEduDbContext dbContext;
         internal DbSet<T> dbSet;
@@ -20,13 +21,16 @@ namespace MartEdu.Data.Repositories
             dbSet = dbContext.Set<T>();
         }
 
-
+        public T Update(T entity)
+            => dbSet.Update(entity).Entity;
         public async Task<T> CreateAsync(T entity)
-        {
-            var res = await dbSet.AddAsync(entity);
+            => (await dbSet.AddAsync(entity)).Entity;
 
-            return res.Entity;
-        }
+        public Task<T> GetAsync(Expression<Func<T, bool>> expression)
+            => dbSet.FirstOrDefaultAsync(expression);
+
+        public IQueryable<T> Where(Expression<Func<T, bool>> expression = null)
+            => expression is null ? dbSet : dbSet.Where(expression);
 
         public async Task<bool> DeleteAsync(Expression<Func<T, bool>> expression)
         {
@@ -40,16 +44,5 @@ namespace MartEdu.Data.Repositories
             return true;
         }
 
-        public async Task<T> GetAsync(Expression<Func<T, bool>> expression)
-        {
-            return (Where(expression)).FirstOrDefault();
-        }
-
-        public T Update(T entity) => dbSet.Update(entity).Entity;
-
-        
-        public IQueryable<T> Where(Expression<Func<T, bool>> expression = null)
-            => expression is null ? dbSet : dbSet.Where(expression);
-        
     }
 }

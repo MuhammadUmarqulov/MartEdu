@@ -13,18 +13,18 @@ namespace MartEdu.Domain.Entities.Authors
         public string Name { get; set; }
         public string Bio { get; set; }
         public string Email { get; set; }
-            
+
         [JsonIgnore]
         public string Password { get; set; }
 
         [JsonIgnore]
         public long Score { get; set; }
 
-        [JsonIgnore]    
+        [JsonIgnore]
         public int CountOfVotes { get; set; }
 
         [NotMapped]
-        public float VoteScore { get => (float)this.Score / (float)this.CountOfVotes; }
+        public float VoteScore { get => Score / (float)this.CountOfVotes; }
 
         public string ProfileImage { get; set; }
         public string BackgroundImage { get; set; }

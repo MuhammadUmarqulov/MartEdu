@@ -1,22 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MartEdu.Service.Extensions.Attributes
 {
     public class MaxFileSize : ValidationAttribute
     {
-        
+
         private readonly int _maxFileSize;
         public MaxFileSize(int maxFileSize)
         {
             _maxFileSize = maxFileSize;
         }
-            
+
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             if (value is IFormFile file)

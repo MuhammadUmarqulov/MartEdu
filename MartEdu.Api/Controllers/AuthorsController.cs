@@ -15,100 +15,57 @@ using System.Threading.Tasks;
 namespace MartEdu.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class AuthorsController : ControllerBase
+    [Route("api/authors")]
+    public class AuthorsController : GenericController<IAuthorService, Author, AuthorForCreationDto>
     {
-        private readonly IAuthorService authorService;
-
-        public AuthorsController(IAuthorService authorService)
+        public AuthorsController(IAuthorService authorService) : base(authorService)
         {
-            this.authorService = authorService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<BaseResponse<IEnumerable<Author>>>> GetAll([FromQuery] PaginationParams @params)
+        [HttpPost("image/profile/{id}")]
+        public async Task<ActionResult<BaseResponse<Author>>> SetProfileImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
         {
-            var result = await authorService.GetAllAsync(@params);
-            
-            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
+            var result = await service.SetProfileImageAsync(p => p.Id == id, image);
+
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<BaseResponse<Author>>> Get(Guid id)
+        [HttpPost("image/background/{id}")]
+        public async Task<ActionResult<BaseResponse<Author>>> SetBackgroundImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
         {
-            var result = await authorService.GetAsync(p => p.Id == id);
+            var result = await service.SetBackgroundImageAsync(p => p.Id == id, image);
 
-            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
+        }
+
+        [HttpDelete("image/profile/{id}")]
+        public async Task<ActionResult<BaseResponse<Author>>> DeleteProfileImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
+        {
+            var result = await service.DeleteProfileImageAsync(p => p.Id == id);
+
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
+        }
+
+        [HttpDelete("image/background/{id}")]
+        public async Task<ActionResult<BaseResponse<Author>>> DeleteBackgroundImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
+        {
+            var result = await service.DeleteBackgroundImageAsync(p => p.Id == id);
+
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
+        }
+
+        [HttpPost("vote/{id}")]
+        public async Task<ActionResult<BaseResponse<Author>>> Vote(Guid id, [Required] int vote)
+        {
+            var result = await service.VoteAsync(vote, p => p.Id == id);
+
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }
 
         [HttpPost]
-        public async Task<ActionResult<BaseResponse<Author>>> Create(AuthorForCreationDto course)
+        public override async Task<ActionResult<BaseResponse<Author>>> Create([FromBody]AuthorForCreationDto creationDto)
         {
-            var result = await authorService.CreateAsync(course);
-
-            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
-        }
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult<BaseResponse<Author>>> Update(Guid id, AuthorForCreationDto course)
-        {
-            var result = await authorService.UpdateAsync(id, course);
-
-            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<BaseResponse<Author>>> Delete(Guid id)
-        {
-            var result = await authorService.DeleteAsync(p => p.Id == id && p.State != ItemState.Deleted);
-
-            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
-        }
-
-        [HttpPost("Restore/{id}")]
-        public async Task<ActionResult<BaseResponse<Author>>> Restore(Guid id)
-        {
-            var result = await authorService.RestoreAsync(p => p.Id == id);
-
-            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
-        }
-
-        [HttpPost("Image/Profile/{id}")]
-        public async Task<ActionResult<BaseResponse<Author>>> SetProfileImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
-        {
-            var result = await authorService.SetProfileImageAsync(p => p.Id == id, image);
-
-            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
-        }
-
-        [HttpPost("Image/Background/{id}")]
-        public async Task<ActionResult<BaseResponse<Author>>> SetBackgroundImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
-        {
-            var result = await authorService.SetBackgroundImageAsync(p => p.Id == id, image);
-                
-            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
-        }
-
-        [HttpDelete("Image/Profile/{id}")]
-        public async Task<ActionResult<BaseResponse<Author>>> DeleteProfileImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
-        {
-            var result = await authorService.DeleteProfileImageAsync(p => p.Id == id);
-
-            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
-        }
-
-        [HttpDelete("Image/Background/{id}")]
-        public async Task<ActionResult<BaseResponse<Author>>> DeleteBackgroundImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
-        {
-            var result = await authorService.DeleteBackgroundImageAsync(p => p.Id == id);
-
-            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
-        }
-
-        [HttpPost("Vote/{id}")]
-        public async Task<ActionResult<BaseResponse<Author>>> Vote(Guid id, [Required] int vote)
-        {
-            var result = await authorService.VoteAsync(vote, p => p.Id == id);
+            var result = await service.CreateAsync(creationDto, p => p.Email == creationDto.Email);
 
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }

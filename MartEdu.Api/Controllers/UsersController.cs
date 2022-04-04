@@ -14,78 +14,35 @@ using System.Threading.Tasks;
 namespace MartEdu.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    [Route("api/users")]
+    public class UsersController : GenericController<IUserService, User, UserForCreationDto>
     {
-        private readonly IUserService userService;
-
-        public UsersController(IUserService userService)
+        public UsersController(IUserService service) : base(service)
         {
-            this.userService = userService;
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<BaseResponse<IEnumerable<User>>>> GetAll([FromQuery] PaginationParams @params)
-        {
-            var result = await userService.GetAllAsync(@params);
-
-            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<BaseResponse<User>>> Get(Guid id)
-        {
-            var result = await userService.GetAsync(p => p.Id == id);
-
-            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);    
         }
 
         [HttpPost]
-        public async Task<ActionResult<BaseResponse<User>>> Create(UserForCreationDto user)
+        public async override Task<ActionResult<BaseResponse<User>>> Create([FromForm] UserForCreationDto creationDto)
         {
-            var result = await userService.CreateAsync(user);
+            var result = await service.CreateAsync(creationDto, p => p.Email == creationDto.Email || p.Username == creationDto.Username);
 
-            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<BaseResponse<User>>> Update(Guid id, UserForCreationDto user)
-        {
-            var result = await userService.UpdateAsync(id, user);
-
-            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<BaseResponse<User>>> Delete(Guid id)
-        {
-            var result = await userService.DeleteAsync(p => p.Id == id);
-
-            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
-        }
-
-        [HttpPost("Restore/{id}")]
-        public async Task<ActionResult<BaseResponse<User>>> Restore(Guid id)
-        {
-            var result = await userService.Restore(p => p.Id == id);
-
-            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
-        }
-
-        [HttpPost("Login")]
+        [HttpPost("login")]
         public async Task<ActionResult<BaseResponse<User>>> Login(UserForLoginDto user)
         {
-            var result = await userService.Login(user);
+            var result = await service.LoginAsync(user);
 
-            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }
 
-        [HttpPost("Image/{id}")]
-        public async Task<ActionResult<BaseResponse<User>>> SetImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5*1024*1024)] IFormFile image)
+        [HttpPost("image/{id}")]
+        public async Task<ActionResult<BaseResponse<User>>> SetImage(Guid id, [FormFileExtensions(".png", ".jpg"), MaxFileSize(5 * 1024 * 1024)] IFormFile image)
         {
-            var result = await userService.SetImage(p => p.Id == id, image);
+            var result = await service.SetImageAsync(p => p.Id == id, image);
 
-            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }
 
     }

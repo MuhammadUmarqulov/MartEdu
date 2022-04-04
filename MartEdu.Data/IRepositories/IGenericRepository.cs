@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MartEdu.Domain.Commons;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MartEdu.Data.IRepositories
 {
-    public interface IGenericRepository<T> where T : class
+    public interface IGenericRepository<T> where T : IAuditable
     {
         Task<T> CreateAsync(T entity);
         T Update(T entity);
