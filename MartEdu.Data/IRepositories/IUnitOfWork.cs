@@ -7,7 +7,7 @@ namespace MartEdu.Data.IRepositories
     {
         IUserRepository Users { get; }
         ICourseRepository Courses { get; }
-
+        IAuthorRepository Authors { get; }
         Task SaveChangesAsync();
     }
 }

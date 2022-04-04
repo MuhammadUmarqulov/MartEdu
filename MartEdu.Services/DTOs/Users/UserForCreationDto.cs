@@ -14,7 +14,7 @@ namespace MartEdu.Service.DTOs.Users
         [Required, MinLength(4), MaxLength(32)]
         public string Username { get; set; }
 
-        [Required, EmailAddress]
+        [Required, EmailAddress, MaxLength(32)]
         public string Email { get; set; }
 
         [Required, MinLength(8), MaxLength(64)]

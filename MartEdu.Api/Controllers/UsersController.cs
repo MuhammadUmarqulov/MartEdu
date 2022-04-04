@@ -28,7 +28,7 @@ namespace MartEdu.Api.Controllers
         {
             var result = await userService.GetAllAsync(@params);
 
-            return StatusCode(200, result);
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
         }
 
         [HttpGet("{id}")]
@@ -36,7 +36,7 @@ namespace MartEdu.Api.Controllers
         {
             var result = await userService.GetAsync(p => p.Id == id);
 
-            return StatusCode(200, result);
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);    
         }
 
         [HttpPost]
@@ -44,7 +44,7 @@ namespace MartEdu.Api.Controllers
         {
             var result = await userService.CreateAsync(user);
 
-            return StatusCode(200, result);
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
         }
 
         [HttpPut("{id}")]
@@ -52,7 +52,7 @@ namespace MartEdu.Api.Controllers
         {
             var result = await userService.UpdateAsync(id, user);
 
-            return StatusCode(200, result);
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
         }
 
         [HttpDelete("{id}")]
@@ -60,7 +60,7 @@ namespace MartEdu.Api.Controllers
         {
             var result = await userService.DeleteAsync(p => p.Id == id);
 
-            return StatusCode(200, result);
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
         }
 
         [HttpPost("restore/{id}")]
@@ -68,7 +68,7 @@ namespace MartEdu.Api.Controllers
         {
             var result = await userService.Restore(p => p.Id == id);
 
-            return StatusCode(200, result);
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
         }
 
         [HttpPost("login")]
@@ -76,7 +76,7 @@ namespace MartEdu.Api.Controllers
         {
             var result = await userService.Login(user);
 
-            return StatusCode(200, result);
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
         }
 
         [HttpPost("image/{id}")]
@@ -84,7 +84,7 @@ namespace MartEdu.Api.Controllers
         {
             var result = await userService.SetImage(p => p.Id == id, image);
 
-            return StatusCode(200, result);
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
         }
 
     }

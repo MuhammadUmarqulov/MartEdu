@@ -25,17 +25,17 @@ namespace MartEdu.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<BaseResponse<IEnumerable<Course>>>> GetAll([FromQuery] PaginationParams @params)
         {
-            var courses = await courseService.GetAllAsync(@params);
+            var result = await courseService.GetAllAsync(@params);
 
-            return StatusCode(200, courses);
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<BaseResponse<Course>>> Get(Guid id)
         {
-            var course = await courseService.GetAsync(p => p.Id == id);
-
-            return StatusCode(200, course);
+            var result = await courseService.GetAsync(p => p.Id == id);
+                
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }
 
         [HttpPost]
@@ -43,7 +43,7 @@ namespace MartEdu.Api.Controllers
         {
             var result = await courseService.CreateAsync(course);
 
-            return StatusCode(200, result);
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
         }
 
         [HttpPut("{id}")]
@@ -51,7 +51,7 @@ namespace MartEdu.Api.Controllers
         {
             var result = await courseService.UpdateAsync(id, course);
 
-            return StatusCode(200, result);
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
         }
 
         [HttpDelete("{id}")]
@@ -59,7 +59,7 @@ namespace MartEdu.Api.Controllers
         {
             var result = await courseService.DeleteAsync(p => p.Id == id && p.State != ItemState.Deleted);
 
-            return StatusCode(200, result);
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
         }
 
         [HttpPost("restore/{id}")]
@@ -67,15 +67,15 @@ namespace MartEdu.Api.Controllers
         {
             var result = await courseService.Restore(p => p.Id == id);
 
-            return StatusCode(200, result);
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
         }
 
         [HttpPost("register/{userId}&{courseId}")]
-        public async Task<ActionResult<BaseResponse<string>>> Register(Guid userId, Guid courseId)
+        public async Task<ActionResult<BaseResponse<Course>>> Register(Guid userId, Guid courseId)
         {
             var result = await courseService.RegisterForCourse(userId, courseId);
-
-            return StatusCode(200, result);
+            
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);  
         }
     }
 }

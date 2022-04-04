@@ -9,6 +9,8 @@ namespace MartEdu.Data.Repositories
     {
         public IUserRepository Users { get; }
         public ICourseRepository Courses { get; }
+        public IAuthorRepository Authors { get; }
+
 
         public MartEduDbContext dbContext;
 
@@ -18,6 +20,7 @@ namespace MartEdu.Data.Repositories
 
             Users = new UserRepository(dbContext);
             Courses = new CourseRepository(dbContext);
+            Authors = new AuthorRepository(dbContext);
         }
         public void Dispose()
         {

@@ -42,18 +42,12 @@ namespace MartEdu.Service.Services
 
             if (existUser is not null)
             {
-                response.Error = new ErrorResponse(400, "User is exist");
+                response.Error = new ErrorResponse(400, "This email or username already taken");
                 return response;
             }
 
-
-            var mappedUser = new User
-            {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Email = model.Email,
-                Password = model.Password.Encrypt(),
-            };
+            var mappedUser = mapper.Map<User>(model);
+            mappedUser.Password = model.Password.Encrypt();
 
             mappedUser.Create();
 
@@ -92,7 +86,7 @@ namespace MartEdu.Service.Services
 
             var user = await unitOfWork.Users.GetAsync(expression);
 
-            if (user.State == ItemState.Deleted)
+            if (user is null || user.State == ItemState.Deleted)
             {
                 response.Error = new ErrorResponse(404, "User not found!");
                 return response;
@@ -131,6 +125,7 @@ namespace MartEdu.Service.Services
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Email = model.Email;
+            user.Password = model.Password.Encrypt();
             user.Update();
 
             var result = await unitOfWork.Users.UpdateAsync(user);

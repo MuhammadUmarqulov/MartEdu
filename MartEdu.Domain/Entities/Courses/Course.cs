@@ -4,11 +4,17 @@ using MartEdu.Domain.Enums;
 using MartEdu.Domain.Enums.Courses;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace MartEdu.Domain.Entities.Courses
 {
     public class Course : IAuditable
     {
+        public Course()
+        {
+            Participants = new List<User>();
+        }
+
         public string Name { get; set; }
         public string Description { get; set; }
         public long Score { get; set; }
@@ -16,9 +22,10 @@ namespace MartEdu.Domain.Entities.Courses
         public Hashtag Teg { get; set; }
         public Level Level { get; set; }
         public Section Section { get; set; }
-        public IEnumerable<User> Participants { get; set; }
+        public virtual ICollection<User> Participants { get; set; }
         public string Image { get; set; }
 
+        [Key]
         public Guid Id { get; set; }
 
         public DateTime CreatedAt { get; set; }

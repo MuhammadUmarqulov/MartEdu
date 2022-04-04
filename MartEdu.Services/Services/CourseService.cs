@@ -3,7 +3,6 @@ using MartEdu.Data.IRepositories;
 using MartEdu.Domain.Commons;
 using MartEdu.Domain.Configurations;
 using MartEdu.Domain.Entities.Courses;
-using MartEdu.Domain.Entities.Users;
 using MartEdu.Domain.Enums;
 using MartEdu.Service.DTOs.Courses;
 using MartEdu.Service.Extensions;
@@ -154,9 +153,9 @@ namespace MartEdu.Service.Services
             course.Level = model.Level;
             course.Section = model.Section;
             course.Description = model.Description;
-
-            course.Image = await FileStreamExtensions.SaveFileAsync(model.Image.OpenReadStream(), model.Image.FileName, env, config);
             
+            course.Image = await FileStreamExtensions.SaveFileAsync(model.Image.OpenReadStream(), model.Image.FileName, env, config);
+
             course.Update();
 
             var result = await unitOfWork.Courses.UpdateAsync(course);
@@ -167,10 +166,10 @@ namespace MartEdu.Service.Services
 
             return response;
         }
-    
-        public async Task<BaseResponse<string>> RegisterForCourse(Guid userId, Guid courseId)
+
+        public async Task<BaseResponse<Course>> RegisterForCourse(Guid userId, Guid courseId)
         {
-            var response = new BaseResponse<string>();
+            var response = new BaseResponse<Course>();
 
             var user = await unitOfWork.Users.GetAsync(p => p.Id == userId && p.State != ItemState.Deleted);
             if (user is null)
@@ -186,17 +185,17 @@ namespace MartEdu.Service.Services
                 return response;
             }
 
-            user.Courses.ToList().Add(course);
+            user.Courses.Add(course);
             user.Update();
             await unitOfWork.Users.UpdateAsync(user);
 
-            course.Participants = new List<User>() { user };
+            course.Participants.Add(user);
             course.Update();
             await unitOfWork.Courses.UpdateAsync(course);
 
             await unitOfWork.SaveChangesAsync();
 
-            response.Data = "Success!";
+            response.Data = course;
             return response;
         }
     }

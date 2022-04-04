@@ -14,6 +14,7 @@ namespace MartEdu.Api.Extensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<IAuthorService, AuthorService>();
         }
     }
 }

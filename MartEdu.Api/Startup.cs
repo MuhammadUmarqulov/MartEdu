@@ -1,6 +1,7 @@
 using MartEdu.Api.Extensions;
 using MartEdu.Data.Contexts;
 using MartEdu.Service.Helpers;
+using MartEdu.Service.Mappers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using MartEdu.Service.Mappers;
 
 namespace MartEdu.Api
 {
