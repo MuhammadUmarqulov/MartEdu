@@ -17,19 +17,19 @@ namespace MartEdu.Api.Extensions
     {
         public static void AddCustomServices(this IServiceCollection services)
         {
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.AddTransient<IGenericRepository<User>, GenericRepository<User>>();
-            services.AddTransient<IGenericService<User, UserForCreationDto>, GenericService<User, UserForCreationDto>>();
-            services.AddTransient<IUserService, UserService>();
+            services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
+            services.AddScoped<IGenericService<User, UserForCreationDto>, GenericService<User, UserForCreationDto>>();
+            services.AddScoped<IUserService, UserService>();
 
-            services.AddTransient<IGenericRepository<Author>, GenericRepository<Author>>();
-            services.AddTransient<IGenericService<Author, AuthorForCreationDto>, GenericService<Author, AuthorForCreationDto>>();
-            services.AddTransient<IAuthorService, AuthorService>();
-            
-            services.AddTransient<IGenericRepository<Course>, GenericRepository<Course>>();
-            services.AddTransient<IGenericService<Course, CourseForCreationDto>, GenericService<Course, CourseForCreationDto>>(); 
-            services.AddTransient<ICourseService, CourseService>();
+            services.AddScoped<IGenericRepository<Author>, GenericRepository<Author>>();
+            services.AddScoped<IGenericService<Author, AuthorForCreationDto>, GenericService<Author, AuthorForCreationDto>>();
+            services.AddScoped<IAuthorService, AuthorService>();
+
+            services.AddScoped<IGenericRepository<Course>, GenericRepository<Course>>();
+            services.AddScoped<IGenericService<Course, CourseForCreationDto>, GenericService<Course, CourseForCreationDto>>();
+            services.AddScoped<ICourseService, CourseService>();
 
         }
     }

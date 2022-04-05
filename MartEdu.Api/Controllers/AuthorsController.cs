@@ -1,8 +1,5 @@
 ﻿using MartEdu.Domain.Commons;
-using MartEdu.Domain.Configurations;
 using MartEdu.Domain.Entities.Authors;
-using MartEdu.Domain.Entities.Courses;
-using MartEdu.Domain.Enums;
 using MartEdu.Service.DTOs.Authors;
 using MartEdu.Service.Extensions;
 using MartEdu.Service.Extensions.Attributes;
@@ -10,7 +7,6 @@ using MartEdu.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
@@ -68,7 +64,7 @@ namespace MartEdu.Api.Controllers
         public override async Task<ActionResult<BaseResponse<Author>>> Create([FromBody] AuthorForCreationDto creationDto)
         {
             creationDto.Password = creationDto.Password.Encrypt();
-            
+
             var result = await service.CreateAsync(creationDto, p => p.Email == creationDto.Email);
 
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
@@ -78,15 +74,15 @@ namespace MartEdu.Api.Controllers
         public async Task<ActionResult<BaseResponse<Author>>> AddCourse(Guid id, Guid courseId)
         {
             var result = await service.AddCourseAsync(id, courseId);
-            
+
             return result;
         }
-        
+
         [HttpGet("{id}/courses/{courseId}")]
         public async Task<ActionResult<BaseResponse<Author>>> GetCourse(Guid id, Guid courseId)
         {
-            var result = await service.GetAsync(p => p.Id == id);   
-            
+            var result = await service.GetAsync(p => p.Id == id);
+
             return result;
         }
 

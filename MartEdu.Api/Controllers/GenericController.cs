@@ -37,7 +37,7 @@ namespace MartEdu.Api.Controllers
 
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }
- 
+
         [HttpPut("{id}")]
         public virtual async Task<ActionResult<BaseResponse<TSource>>> Update(Guid id, TSourceForCreationDto creationDto)
         {

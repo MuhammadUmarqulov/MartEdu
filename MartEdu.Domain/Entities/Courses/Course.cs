@@ -6,7 +6,6 @@ using MartEdu.Domain.Enums.Courses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MartEdu.Domain.Entities.Courses
@@ -37,7 +36,7 @@ namespace MartEdu.Domain.Entities.Courses
         [NotMapped]
         public float VoteScore { get => Score / (float)this.CountOfVotes; }
 
-       
+
 
         public Guid Id { get; set; }
 

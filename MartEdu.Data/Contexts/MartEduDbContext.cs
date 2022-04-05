@@ -10,7 +10,7 @@ namespace MartEdu.Data.Contexts
     {
         public MartEduDbContext(DbContextOptions<MartEduDbContext> options) : base(options)
         {
-            
+
         }
 
         public virtual DbSet<User> Users { get; set; }

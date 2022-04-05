@@ -8,6 +8,7 @@ using MartEdu.Service.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace MartEdu.Service.Services
@@ -54,6 +55,32 @@ namespace MartEdu.Service.Services
             await unitOfWork.SaveChangesAsync();
 
             response.Data = course;
+            return response;
+        }
+
+        public async Task<BaseResponse<Course>> VoteAsync(int vote, Expression<Func<Course, bool>> expression)
+        {
+            var response = new BaseResponse<Course>();
+
+            var course = await unitOfWork.Courses.GetAsync(expression);
+
+            if (course is null)
+            {
+                response.Error = new ErrorResponse(404, "Course not found!");
+                return response;
+            }
+
+            course.Score += vote;
+            course.CountOfVotes++;
+
+
+            course.Update();
+            unitOfWork.Courses.Update(course);
+
+            await unitOfWork.SaveChangesAsync();
+
+            response.Data = course;
+
             return response;
         }
     }

@@ -1,15 +1,13 @@
 ﻿using MartEdu.Domain.Commons;
-using MartEdu.Domain.Configurations;
 using MartEdu.Domain.Entities.Users;
 using MartEdu.Service.DTOs.Users;
+using MartEdu.Service.Extensions;
 using MartEdu.Service.Extensions.Attributes;
 using MartEdu.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using MartEdu.Service.Extensions;
 
 namespace MartEdu.Api.Controllers
 {

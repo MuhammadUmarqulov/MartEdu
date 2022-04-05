@@ -34,7 +34,7 @@ namespace MartEdu.Domain.Entities.Authors
         [NotMapped]
         public float VoteScore { get => Score / (float)this.CountOfVotes; }
 
-       
+
         public Guid Id { get; set; }
 
         public DateTime CreatedAt { get; set; }

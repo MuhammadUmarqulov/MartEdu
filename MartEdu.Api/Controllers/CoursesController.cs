@@ -1,12 +1,9 @@
 ﻿using MartEdu.Domain.Commons;
-using MartEdu.Domain.Configurations;
 using MartEdu.Domain.Entities.Courses;
-using MartEdu.Domain.Enums;
 using MartEdu.Service.DTOs.Courses;
 using MartEdu.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MartEdu.Api.Controllers

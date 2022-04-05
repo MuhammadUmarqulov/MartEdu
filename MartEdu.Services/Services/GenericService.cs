@@ -145,7 +145,7 @@ namespace MartEdu.Service.Services
             }
 
             source = mapper.Map(model, source);
-            
+
             source.Update();
 
             var result = repository.Update(source);

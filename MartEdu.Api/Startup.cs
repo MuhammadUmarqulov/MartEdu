@@ -56,7 +56,7 @@ namespace MartEdu.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MartEducation v1"));
             }
-            
+
             if (app.ApplicationServices.GetService<IHttpContextAccessor>() != null)
             {
                 HttpContextHelper.Accessor = app.ApplicationServices.GetRequiredService<IHttpContextAccessor>();
