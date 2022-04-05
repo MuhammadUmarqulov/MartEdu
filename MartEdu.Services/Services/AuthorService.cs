@@ -1,14 +1,20 @@
 ﻿using AutoMapper;
+using MartEdu.Data.Contexts;
 using MartEdu.Data.IRepositories;
 using MartEdu.Domain.Commons;
+using MartEdu.Domain.Configurations;
 using MartEdu.Domain.Entities.Authors;
+using MartEdu.Domain.Enums;
 using MartEdu.Service.DTOs.Authors;
 using MartEdu.Service.Extensions;
 using MartEdu.Service.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -22,8 +28,9 @@ namespace MartEdu.Service.Services
                 IMapper mapper,
                 IWebHostEnvironment env,
                 IConfiguration config,
-                IGenericRepository<Author> repository
-            ) : base(unitOfWork, mapper, env, config, repository)
+                IGenericRepository<Author> repository,
+                MartEduDbContext dbContext
+            ) : base(unitOfWork, mapper, env, config, repository, dbContext, "Courses")
         {
         }
 
@@ -174,7 +181,7 @@ namespace MartEdu.Service.Services
         public async Task<BaseResponse<Author>> VoteAsync(int vote, Expression<Func<Author, bool>> expression)
         {
             var response = new BaseResponse<Author>();
-            
+
             if (vote < 1 || vote > 5)
             {
                 response.Error = new ErrorResponse(400, "The score cannot be less than 1 and more than 5!");

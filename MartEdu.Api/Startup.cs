@@ -32,6 +32,10 @@ namespace MartEdu.Api
 
             services.AddControllers().AddNewtonsoftJson();
 
+            services.AddControllersWithViews().AddNewtonsoftJson(
+                options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MartEducation", Version = "v1" });

@@ -19,7 +19,7 @@ namespace MartEdu.Domain.Entities.Authors
         public string Email { get; set; }
         public string ProfileImage { get; set; }
         public string BackgroundImage { get; set; }
-        public virtual ICollection<Course> Courses { get; set; }
+        public virtual ICollection<Course> Courses { get; }
 
 
         [JsonIgnore]

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MartEdu.Data.Contexts;
 using MartEdu.Data.IRepositories;
 using MartEdu.Domain.Commons;
 using MartEdu.Domain.Configurations;
@@ -12,11 +13,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using MartEdu.Domain.Entities.Authors;
+using MartEdu.Service.DTOs.Authors;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace MartEdu.Service.Services
 {
     public class GenericService<TSource, TSourceForCreationDto> : IGenericService<TSource, TSourceForCreationDto>
-        where TSource : IAuditable
+        where TSource : class, IAuditable
         where TSourceForCreationDto : class
     {
         protected readonly IUnitOfWork unitOfWork;
@@ -24,13 +30,18 @@ namespace MartEdu.Service.Services
         protected readonly IWebHostEnvironment env;
         protected readonly IConfiguration config;
         protected readonly IGenericRepository<TSource> repository;
-        public GenericService(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment env, IConfiguration config, IGenericRepository<TSource> repository)
+        protected readonly MartEduDbContext dbContext;
+        protected readonly string includeParams;
+
+        public GenericService(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment env, IConfiguration config, IGenericRepository<TSource> repository, MartEduDbContext dbContext, string includeParams = null)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
             this.env = env;
             this.config = config;
             this.repository = repository;
+            this.dbContext = dbContext;
+            this.includeParams = includeParams;
         }
 
         public virtual async Task<BaseResponse<TSource>> CreateAsync(TSourceForCreationDto model, Expression<Func<TSource, bool>> expression)
@@ -63,15 +74,15 @@ namespace MartEdu.Service.Services
         {
             var response = new BaseResponse<bool>();
 
-            var author = await repository.GetAsync(expression);
+            var source = await repository.GetAsync(expression);
 
-            if (author is null || author.State == ItemState.Deleted)
+            if (source is null || source.State == ItemState.Deleted)
             {
                 response.Error = new ErrorResponse(404, $"{typeof(TSource).Name} not found");
                 return response;
             }
 
-            author.Delete();
+            source.Delete();
             await unitOfWork.SaveChangesAsync();
 
             response.Data = true;
@@ -83,11 +94,14 @@ namespace MartEdu.Service.Services
         {
             var response = new BaseResponse<IEnumerable<TSource>>();
 
-            var authors = repository.Where(expression);
 
-            authors = authors.Where(p => p.State != ItemState.Deleted);
+            var sources = repository.Where(expression).Where(p => p.State != ItemState.Deleted);
 
-            response.Data = authors.ToPagedList(@params);
+            if (!string.IsNullOrEmpty(includeParams))
+                sources = sources.Include(includeParams);
+
+
+            response.Data = sources.ToPagedList(@params);
 
             return response;
         }
@@ -96,15 +110,15 @@ namespace MartEdu.Service.Services
         {
             var response = new BaseResponse<TSource>();
 
-            var author = await repository.GetAsync(expression);
+            var source = await repository.GetAsync(expression);
 
-            if (author.State == ItemState.Deleted)
+            if (source.State == ItemState.Deleted)
             {
                 response.Error = new ErrorResponse(404, $"{typeof(TSource).Name} not found");
                 return response;
             }
 
-            response.Data = author;
+            response.Data = source;
 
             return response;
         }
@@ -113,21 +127,21 @@ namespace MartEdu.Service.Services
         {
             var response = new BaseResponse<TSource>();
 
-            var author = await repository.GetAsync(expression);
+            var source = await repository.GetAsync(expression);
 
-            if (author is null)
+            if (source is null)
             {
                 response.Error = new ErrorResponse(404, $"{typeof(TSource).Name} not found");
                 return response;
             }
 
-            author.Update();
+            source.Update();
 
-            repository.Update(author);
+            repository.Update(source);
 
             await unitOfWork.SaveChangesAsync();
 
-            response.Data = author;
+            response.Data = source;
 
             return response;
         }
@@ -137,7 +151,8 @@ namespace MartEdu.Service.Services
             var response = new BaseResponse<TSource>();
 
             // check for exist TSource
-            var source = await repository.GetAsync(p => p.Id == id && p.State == ItemState.Deleted);
+            var source = await repository.GetAsync(p => p.Id == id && p.State != ItemState.Deleted);
+
             if (source is null)
             {
                 response.Error = new ErrorResponse(404, $"{typeof(TSource).Name} not found");

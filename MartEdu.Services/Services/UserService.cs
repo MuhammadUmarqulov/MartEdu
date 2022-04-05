@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MartEdu.Data.Contexts;
 using MartEdu.Data.IRepositories;
 using MartEdu.Domain.Commons;
 using MartEdu.Domain.Entities.Users;
@@ -24,8 +25,9 @@ namespace MartEdu.Service.Services
                IMapper mapper,
                IWebHostEnvironment env,
                IConfiguration config,
-               IGenericRepository<User> repository
-           ) : base(unitOfWork, mapper, env, config, repository)
+               IGenericRepository<User> repository,
+               MartEduDbContext dbContext
+           ) : base(unitOfWork, mapper, env, config, repository, dbContext, "Courses")
         {
         }
 

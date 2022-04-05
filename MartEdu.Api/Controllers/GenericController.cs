@@ -31,7 +31,7 @@ namespace MartEdu.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public virtual async Task<ActionResult<BaseResponse<TSource>>> Get([FromQuery] Guid id)
+        public virtual async Task<ActionResult<BaseResponse<TSource>>> Get(Guid id)
         {
             var result = await service.GetAsync(p => p.Id == id);
 

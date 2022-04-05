@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MartEdu.Data.Contexts;
 using MartEdu.Data.IRepositories;
 using MartEdu.Domain.Commons;
 using MartEdu.Domain.Entities.Courses;
@@ -21,11 +22,12 @@ namespace MartEdu.Service.Services
                 IMapper mapper,
                 IWebHostEnvironment env,
                 IConfiguration config,
-                IGenericRepository<Course> repository
-            ) : base(unitOfWork, mapper, env, config, repository)
+                IGenericRepository<Course> repository,
+                MartEduDbContext dbContext
+            ) : base(unitOfWork, mapper, env, config, repository, dbContext, "Participants")
         {
-
         }
+
         public async Task<BaseResponse<Course>> RegisterForCourseAsync(Guid userId, Guid courseId)
         {
             var response = new BaseResponse<Course>();
