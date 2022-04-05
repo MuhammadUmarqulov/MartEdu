@@ -20,7 +20,7 @@ namespace MartEdu.Api.Controllers
         }
 
         [HttpPost()]
-        public async override Task<ActionResult<BaseResponse<Course>>> Create([FromForm] CourseForCreationDto creationDto)
+        public async override Task<ActionResult<BaseResponse<Course>>> Create(CourseForCreationDto creationDto)
         {
             var result = await service.CreateAsync(creationDto, p => p.Name == creationDto.Name);
 

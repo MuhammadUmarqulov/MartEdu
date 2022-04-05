@@ -20,6 +20,8 @@ namespace MartEdu.Api.Controllers
             this.service = service;
         }
 
+        public abstract Task<ActionResult<BaseResponse<TSource>>> Create(TSourceForCreationDto creationDto);
+
         [HttpGet]
         public virtual async Task<ActionResult<BaseResponse<IEnumerable<TSource>>>> GetAll([FromQuery] PaginationParams @params)
         {
@@ -35,11 +37,7 @@ namespace MartEdu.Api.Controllers
 
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }
-
-        [HttpPost]
-        public abstract Task<ActionResult<BaseResponse<TSource>>> Create([FromForm] TSourceForCreationDto creationDto);
-        
-
+ 
         [HttpPut("{id}")]
         public virtual async Task<ActionResult<BaseResponse<TSource>>> Update(Guid id, TSourceForCreationDto creationDto)
         {

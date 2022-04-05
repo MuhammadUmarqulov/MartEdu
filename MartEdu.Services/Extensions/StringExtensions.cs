@@ -3,7 +3,7 @@ using System.Text;
 
 namespace MartEdu.Service.Extensions
 {
-    internal static class StringExtensions
+    public static class StringExtensions
     {
         public static string Encrypt(this string password)
         {

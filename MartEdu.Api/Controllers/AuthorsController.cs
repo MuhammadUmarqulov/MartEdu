@@ -4,6 +4,7 @@ using MartEdu.Domain.Entities.Authors;
 using MartEdu.Domain.Entities.Courses;
 using MartEdu.Domain.Enums;
 using MartEdu.Service.DTOs.Authors;
+using MartEdu.Service.Extensions;
 using MartEdu.Service.Extensions.Attributes;
 using MartEdu.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -66,6 +67,8 @@ namespace MartEdu.Api.Controllers
         [HttpPost]
         public override async Task<ActionResult<BaseResponse<Author>>> Create([FromBody] AuthorForCreationDto creationDto)
         {
+            creationDto.Password = creationDto.Password.Encrypt();
+            
             var result = await service.CreateAsync(creationDto, p => p.Email == creationDto.Email);
 
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using MartEdu.Service.Extensions;
 
 namespace MartEdu.Api.Controllers
 {
@@ -22,8 +22,10 @@ namespace MartEdu.Api.Controllers
         }
 
         [HttpPost]
-        public async override Task<ActionResult<BaseResponse<User>>> Create([FromForm] UserForCreationDto creationDto)
+        public async override Task<ActionResult<BaseResponse<User>>> Create(UserForCreationDto creationDto)
         {
+            creationDto.Password = creationDto.Password.Encrypt();
+
             var result = await service.CreateAsync(creationDto, p => p.Email == creationDto.Email || p.Username == creationDto.Username);
 
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
