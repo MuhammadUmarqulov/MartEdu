@@ -174,6 +174,12 @@ namespace MartEdu.Service.Services
         public async Task<BaseResponse<Author>> VoteAsync(int vote, Expression<Func<Author, bool>> expression)
         {
             var response = new BaseResponse<Author>();
+            
+            if (vote < 1 || vote > 5)
+            {
+                response.Error = new ErrorResponse(400, "The score cannot be less than 1 and more than 5!");
+                return response;
+            }
 
             var author = await unitOfWork.Authors.GetAsync(expression);
 

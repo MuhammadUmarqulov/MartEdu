@@ -62,6 +62,12 @@ namespace MartEdu.Service.Services
         {
             var response = new BaseResponse<Course>();
 
+            if (vote < 1 || vote > 5)
+            {
+                response.Error = new ErrorResponse(400, "The score cannot be less than 0 and more than 5!");
+                return response;
+            }
+
             var course = await unitOfWork.Courses.GetAsync(expression);
 
             if (course is null)

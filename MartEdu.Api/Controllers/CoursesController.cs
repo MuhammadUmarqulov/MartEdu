@@ -4,6 +4,7 @@ using MartEdu.Service.DTOs.Courses;
 using MartEdu.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace MartEdu.Api.Controllers
@@ -31,5 +32,14 @@ namespace MartEdu.Api.Controllers
 
             return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
         }
+
+        [HttpPost("{id}/vote/")]
+        public async Task<ActionResult<BaseResponse<Course>>> Vote(Guid id, [Required] int vote)
+        {
+            var result = await service.VoteAsync(vote, p => p.Id == id);
+
+            return StatusCode(result.Error is null ? result.Code : result.Error.Code, result);
+        }
+
     }
 }
